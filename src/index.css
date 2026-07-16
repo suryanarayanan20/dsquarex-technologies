@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------
+   Design tokens — DSquareX Technologies
+   Signature idea: "The Crossing" — the D/X mark is two paths
+   that cross. Diagonal seams, a slash divider, and a two-
+   letter mono tag system carry that idea through every
+   section instead of stock glow-blobs and emoji icons.
+--------------------------------------------------------- */
+
+:root {
+  --bg: #0b0d12;
+  --bg-raised: #12151c;
+  --bg-raised-2: #171b24;
+  --blue: #1e6fe0;
+  --blue-soft: #4f97ec;
+  --orange: #e8790c;
+  --orange-soft: #f2a04d;
+  --ink: #f3f1ea;
+  --muted: #9b9691;
+  --line: rgba(255, 255, 255, 0.09);
+
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--blue), var(--orange));
+  border-radius: 20px;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--bg);
+}
+
+/* ---------------------------------------------------------
+   The Crossing — diagonal seams between sections, in place
+   of straight hairlines. Applied via clip-path on the section
+   wrapper so content above still reads as a full rectangle.
+--------------------------------------------------------- */
+
+.seam-down {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 48px));
+}
+
+.seam-up {
+  clip-path: polygon(0 48px, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Slash divider — replaces numbered markers where content
+   isn't actually a sequence. */
+.slash::before {
+  content: "/";
+  color: var(--orange);
+  font-family: var(--font-mono);
+  margin-right: 0.5em;
+}
+
+/* Two-letter tag chip, echoes the DX mark */
+.tag-mark {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(135deg, rgba(30,111,224,0.16), rgba(232,121,12,0.16));
+  border: 1px solid var(--line);
+  color: var(--orange-soft);
+}
+
+/* Card hover sweep */
+.card-cross {
+  position: relative;
+  transition: transform 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+.card-cross::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(30,111,224,0.10) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+}
+.card-cross:hover {
+  transform: translateY(-6px);
+  border-color: rgba(232, 121, 12, 0.35);
+}
+.card-cross:hover::after {
+  transform: translateX(120%);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--blue-soft), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+}
+
+/* Navbar corner logo — its own animation, distinct from the
+   page watermark: a slow tilt-and-glow loop, always in motion. */
+@keyframes logo-nav-loop {
+  0% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 0px rgba(30, 111, 224, 0));
+  }
+  25% {
+    transform: rotate(-6deg) scale(1.05);
+    filter: drop-shadow(0 0 10px rgba(30, 111, 224, 0.55));
+  }
+  50% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 14px rgba(232, 121, 12, 0.6));
+  }
+  75% {
+    transform: rotate(6deg) scale(1.05);
+    filter: drop-shadow(0 0 10px rgba(30, 111, 224, 0.55));
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 0px rgba(30, 111, 224, 0));
+  }
+}
+
+.logo-nav {
+  animation: logo-nav-loop 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.logo-nav:hover {
+  animation-duration: 1.6s;
+}
+
+/* Hero centerpiece logo mark — rotating gradient rings, orbiting
+   particles, and a gentle float. This is the "in motion, in place"
+   signature moment; the nav logo and page watermark stay separate,
+   quieter animations so this one reads as the standout. */
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ring-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logo-mark-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.orbit-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--blue) 16%,
+    transparent 34%,
+    transparent 55%,
+    var(--orange) 71%,
+    transparent 90%
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+  opacity: 0.85;
+}
+.orbit-ring-a {
+  animation: ring-spin 11s linear infinite;
+}
+.orbit-ring-b {
+  animation: ring-spin-reverse 7.5s linear infinite;
+}
+
+.orbit-track {
+  animation-name: orbit-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.logo-mark-core {
+  animation: logo-mark-float 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(30, 111, 224, 0.45))
+    drop-shadow(0 0 28px rgba(232, 121, 12, 0.3));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-nav {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
