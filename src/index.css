@@ -260,22 +260,34 @@ h1, h2, h3, h4 {
    Animated Logo Mobile Optimization
 ======================================== */
 .orbit-ring-a {
-  animation: ring-spin 11s linear infinite;
+  animation: ring-spin 14s linear infinite;
 }
 
 .orbit-ring-b {
-  animation: ring-spin-reverse 7.5s linear infinite;
+  animation: ring-spin-reverse 10s linear infinite;
 }
 
 .orbit-track {
-  animation-name: orbit-spin;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  animation: orbit-spin 10s linear infinite;
 }
+
 .logo-mark-core {
   animation: logo-mark-float 4s ease-in-out infinite;
   filter:
-    drop-shadow(0 0 12px rgba(0,163,255,.8))
-    drop-shadow(0 0 24px rgba(0,163,255,.5))
-    drop-shadow(0 0 36px rgba(255,153,0,.4));
+    drop-shadow(0 0 8px rgba(0,163,255,.6))
+    drop-shadow(0 0 16px rgba(255,153,0,.3));
+}
+
+@media (max-width:768px) {
+  .orbit-ring-a {
+    animation-duration: 20s;
+  }
+
+  .orbit-ring-b {
+    animation-duration: 15s;
+  }
+
+  .orbit-track {
+    animation-duration: 14s;
+  }
 }

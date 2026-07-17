@@ -59,15 +59,15 @@ function Navbar() {
         {/* Right Side */}
         <div className="flex items-center gap-3">
 
-          {/* Mobile Animated Logo */}
-          <div className="md:hidden flex items-center justify-center">
-            <AnimatedLogoMark size={58} />
-          </div>
+         {/* Mobile Animated Logo */}
+<div className="md:hidden">
+  <AnimatedLogoMark size={48} />
+</div>
 
-          {/* Desktop Animated Logo */}
-          <div className="hidden md:flex items-center justify-center">
-            <AnimatedLogoMark size={62} />
-          </div>
+{/* Desktop Animated Logo */}
+<div className="hidden md:block">
+  <AnimatedLogoMark size={64} />
+</div>
 
           {/* Desktop CTA */}
           <a
