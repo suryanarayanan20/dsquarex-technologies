@@ -16,11 +16,11 @@ function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/[0.06] bg-[#0A111E]/85 backdrop-blur-xl">
-
+      
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
 
-        {/* Logo */}
-        <a href="#home" className="flex items-center gap-3">
+        {/* Left Logo */}
+        <a href="#home" className="flex items-center gap-2">
 
           <img
             src={logo}
@@ -29,21 +29,19 @@ function Navbar() {
           />
 
           <div className="leading-tight">
-
             <p className="font-[Space_Grotesk] font-semibold text-base md:text-lg text-white">
               DSquareX
             </p>
 
-            <p className="text-[10px] tracking-[0.2em] text-slate-400 uppercase">
+            <p className="text-[8px] md:text-[10px] tracking-[0.2em] text-slate-400 uppercase">
               Technologies
             </p>
-
           </div>
 
         </a>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-10">
+        <ul className="hidden md:flex items-center gap-8">
 
           {links.map((link) => (
             <li key={link.name}>
@@ -58,42 +56,45 @@ function Navbar() {
 
         </ul>
 
-        {/* Desktop CTA */}
+        {/* Right Side */}
         <div className="flex items-center gap-3">
 
-  {/* Animated logo - mobile & desktop */}
-  <div className="flex items-center">
-    <AnimatedLogoMark size={window.innerWidth < 768 ? 32 : 60} />
-  </div>
+          {/* Mobile Animated Logo */}
+          <div className="md:hidden flex items-center justify-center">
+            <AnimatedLogoMark size={58} />
+          </div>
 
-  {/* Desktop CTA only */}
-  <a
-    href="https://wa.me/916282787553"
-    target="_blank"
-    rel="noreferrer"
-    className="hidden md:inline-flex items-center gap-2 border border-[var(--orange)]/50 hover:bg-[var(--orange)]/10 text-[var(--ink)] font-medium px-5 py-2.5 rounded-lg transition-colors duration-300"
-  >
-    Start a Project
-  </a>
+          {/* Desktop Animated Logo */}
+          <div className="hidden md:flex items-center justify-center">
+            <AnimatedLogoMark size={62} />
+          </div>
 
-</div>
+          {/* Desktop CTA */}
+          <a
+            href="https://wa.me/916282787553"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden md:inline-flex items-center gap-2 border border-[#FF9900]/40 hover:bg-[#FF9900]/10 text-white font-medium px-5 py-2.5 rounded-xl transition-all duration-300"
+          >
+            Start a Project
+          </a>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-2xl text-white"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle Menu"
-        >
-          {menuOpen ? "✕" : "☰"}
-        </button>
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-2xl text-white ml-1"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+
+        </div>
 
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-
         {menuOpen && (
-
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -101,7 +102,6 @@ function Navbar() {
             transition={{ duration: 0.3 }}
             className="md:hidden bg-[#0A111E] border-t border-white/[0.06] overflow-hidden"
           >
-
             <ul className="flex flex-col text-center py-3">
 
               {links.map((link) => (
@@ -117,7 +117,6 @@ function Navbar() {
               ))}
 
               <li className="px-5 py-4">
-
                 <a
                   href="https://wa.me/916282787553"
                   target="_blank"
@@ -126,15 +125,11 @@ function Navbar() {
                 >
                   Start a Project
                 </a>
-
               </li>
 
             </ul>
-
           </motion.div>
-
         )}
-
       </AnimatePresence>
 
     </nav>

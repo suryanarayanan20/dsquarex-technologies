@@ -255,3 +255,27 @@ h1, h2, h3, h4 {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ========================================
+   Animated Logo Mobile Optimization
+======================================== */
+.orbit-ring-a {
+  animation: ring-spin 11s linear infinite;
+}
+
+.orbit-ring-b {
+  animation: ring-spin-reverse 7.5s linear infinite;
+}
+
+.orbit-track {
+  animation-name: orbit-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.logo-mark-core {
+  animation: logo-mark-float 4s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 12px rgba(0,163,255,.8))
+    drop-shadow(0 0 24px rgba(0,163,255,.5))
+    drop-shadow(0 0 36px rgba(255,153,0,.4));
+}
