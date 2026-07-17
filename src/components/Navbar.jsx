@@ -61,7 +61,7 @@ function Navbar() {
 
          {/* Mobile Animated Logo */}
 <div className="md:hidden">
-  <AnimatedLogoMark size={70} />
+  <AnimatedLogoMark size={40} />
 </div>
 
 {/* Desktop Animated Logo */}
