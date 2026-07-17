@@ -1,36 +1,38 @@
 import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 
-function AnimatedLogoMark({ size = 56 }) {
+function AnimatedLogoMark({ size = 50 }) {
   return (
-    <motion.div
+    <div
       className="relative flex items-center justify-center"
-      style={{ width: size, height: size }}
-      animate={{ rotate: 360 }}
-      transition={{
-        duration: 12,
-        repeat: Infinity,
-        ease: "linear",
+      style={{
+        width: size,
+        height: size,
       }}
     >
-      {/* Glow Ring */}
+      {/* Background Glow */}
       <div
-        className="absolute inset-0 rounded-full"
+        className="absolute rounded-full"
         style={{
-          border: "2px solid rgba(0,163,255,.5)",
-          boxShadow: "0 0 15px rgba(0,163,255,.4)",
+          width: size * 1.5,
+          height: size * 1.5,
+          background:
+            "radial-gradient(circle, rgba(0,163,255,.25) 0%, rgba(255,153,0,.15) 45%, transparent 75%)",
+          filter: "blur(10px)",
         }}
       />
 
-      {/* Orange Ring */}
+      {/* Outer Ring */}
       <motion.div
-        className="absolute rounded-full"
+        className="absolute inset-0 rounded-full"
         style={{
-          width: "75%",
-          height: "75%",
-          border: "2px solid rgba(255,153,0,.5)",
+          borderTop: "2px solid #00A3FF",
+          borderRight: "2px solid transparent",
+          borderBottom: "2px solid #00A3FF",
+          borderLeft: "2px solid transparent",
+          boxShadow: "0 0 12px rgba(0,163,255,.7)",
         }}
-        animate={{ rotate: -360 }}
+        animate={{ rotate: 360 }}
         transition={{
           duration: 8,
           repeat: Infinity,
@@ -38,26 +40,66 @@ function AnimatedLogoMark({ size = 56 }) {
         }}
       />
 
-      {/* Floating Logo */}
-      <motion.img
-        src={logo}
-        alt="DSquareX"
-        className="z-10"
+      {/* Inner Ring */}
+      <motion.div
+        className="absolute rounded-full"
         style={{
-          width: size * 0.7,
-          height: size * 0.7,
-          objectFit: "contain",
+          width: "72%",
+          height: "72%",
+          borderTop: "2px solid #FF9900",
+          borderRight: "2px solid transparent",
+          borderBottom: "2px solid #FF9900",
+          borderLeft: "2px solid transparent",
+          boxShadow: "0 0 10px rgba(255,153,0,.7)",
         }}
-        animate={{
-          y: [0, -4, 0],
-          scale: [1, 1.05, 1],
-        }}
+        animate={{ rotate: -360 }}
         transition={{
-          duration: 2.5,
+          duration: 5,
           repeat: Infinity,
+          ease: "linear",
         }}
       />
-    </motion.div>
+
+      {/* Orbit Dot */}
+      <motion.div
+        className="absolute inset-0"
+        animate={{ rotate: 360 }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 5,
+            height: 5,
+            borderRadius: "50%",
+            background: "#00A3FF",
+            boxShadow: "0 0 10px #00A3FF",
+            transform: `translate(-50%, -50%) translateX(${size * 0.45}px)`,
+          }}
+        />
+      </motion.div>
+
+      {/* Static Logo */}
+      <img
+        src={logo}
+        alt="DSquareX"
+        draggable="false"
+        className="relative z-10 select-none"
+        style={{
+          width: size * 0.65,
+          height: size * 0.65,
+          objectFit: "contain",
+          filter:
+            "drop-shadow(0 0 8px rgba(0,163,255,.8)) drop-shadow(0 0 16px rgba(255,153,0,.5))",
+        }}
+      />
+    </div>
   );
 }
 

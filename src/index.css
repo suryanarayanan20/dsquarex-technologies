@@ -231,4 +231,9 @@ h1, h2, h3, h4 {
   .orbit-track {
     animation-duration: 14s;
   }
+}/* Smooth GPU Rendering */
+img,
+div {
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
