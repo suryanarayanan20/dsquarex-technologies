@@ -184,98 +184,39 @@ h1, h2, h3, h4 {
    signature moment; the nav logo and page watermark stay separate,
    quieter animations so this one reads as the standout. */
 @keyframes ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes ring-spin-reverse {
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes orbit-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes logo-mark-float {
-  0%, 100% {
+@keyframes logo-float {
+  0%,100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-2px);
   }
 }
 
-.orbit-ring {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0%,
-    var(--blue) 16%,
-    transparent 34%,
-    transparent 55%,
-    var(--orange) 71%,
-    transparent 90%
-  );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
-  opacity: 0.85;
-}
 .orbit-ring-a {
-  animation: ring-spin 11s linear infinite;
-}
-.orbit-ring-b {
-  animation: ring-spin-reverse 7.5s linear infinite;
-}
-
-.orbit-track {
-  animation-name: orbit-spin;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  animation: ring-spin 10s linear infinite;
 }
 
 .logo-mark-core {
-  animation: logo-mark-float 4.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 16px rgba(30, 111, 224, 0.45))
-    drop-shadow(0 0 28px rgba(232, 121, 12, 0.3));
+  animation: logo-float 3s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .logo-nav {
+@media (max-width:768px) {
+  .orbit-ring-a {
+    animation-duration: 15s;
+  }
+
+  .logo-mark-core {
     animation: none;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
-/* ========================================
-   Animated Logo Mobile Optimization
-======================================== */
-.orbit-ring-a {
-  animation: ring-spin 14s linear infinite;
-}
-
-.orbit-ring-b {
-  animation: ring-spin-reverse 10s linear infinite;
-}
-
-.orbit-track {
-  animation: orbit-spin 10s linear infinite;
-}
-
-.logo-mark-core {
-  animation: logo-mark-float 4s ease-in-out infinite;
-  filter:
-    drop-shadow(0 0 8px rgba(0,163,255,.6))
-    drop-shadow(0 0 16px rgba(255,153,0,.3));
 }
 
 @media (max-width:768px) {
