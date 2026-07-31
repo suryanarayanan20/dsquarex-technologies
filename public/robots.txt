@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://desquarextechnologies.in/sitemap.xml
+Sitemap: https://www.desquarextechnologies.in/sitemap.xml
