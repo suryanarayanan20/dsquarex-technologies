@@ -41,6 +41,15 @@
       ]
     },
     {
+      "source": "/work/(.*)\\.(webp|jpg)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -57,5 +66,16 @@
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+    {
+      "source": "/work",
+      "destination": "/work/index.html"
+    },
+    {
+      "source": "/work/:slug",
+      "destination": "/work/:slug/index.html"
+    }
+  ],
+  "trailingSlash": false
 }

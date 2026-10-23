@@ -1,111 +1,45 @@
 import { motion } from "framer-motion";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-mark.webp";
 
-function AnimatedLogoMark({ size = 56 }) {
+/**
+ * Brand mark with the two counter-rotating rings (blue / orange) that echo
+ * the crossing D/X. Rings stop automatically for visitors who prefer reduced
+ * motion (App wraps everything in <MotionConfig reducedMotion="user">).
+ */
+function AnimatedLogoMark({ size = 44 }) {
   return (
-    <div
-      className="relative flex items-center justify-center"
-      style={{
-        width: size,
-        height: size,
-      }}
-    >
-      {/* Glow */}
-      <div
+    <span className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <span
         className="absolute rounded-full"
         style={{
-          width: size * 1.5,
-          height: size * 1.5,
-          background:
-            "radial-gradient(circle, rgba(0,163,255,.25), rgba(255,153,0,.15), transparent 75%)",
-          filter: "blur(14px)",
+          width: size * 1.35,
+          height: size * 1.35,
+          background: "radial-gradient(circle, rgba(30,111,224,.22), rgba(232,121,12,.12), transparent 72%)",
+          filter: "blur(10px)",
         }}
       />
-
-      {/* OUTER RING */}
-      <motion.div
+      <motion.span
         className="absolute inset-0 rounded-full"
-        style={{
-          borderTop: "2px solid #00A3FF",
-          borderRight: "2px solid transparent",
-          borderBottom: "2px solid #FF9900",
-          borderLeft: "2px solid transparent",
-          boxShadow: "0 0 18px rgba(0,163,255,.5)",
-        }}
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        style={{ border: "1.5px solid transparent", borderTopColor: "var(--blue-soft)", borderBottomColor: "var(--orange)" }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
       />
-
-      {/* INNER RING */}
-      <motion.div
+      <motion.span
         className="absolute rounded-full"
-        style={{
-          width: "70%",
-          height: "70%",
-          borderTop: "2px solid #FF9900",
-          borderBottom: "2px solid #00A3FF",
-          borderLeft: "2px solid transparent",
-          borderRight: "2px solid transparent",
-          boxShadow: "0 0 14px rgba(255,153,0,.5)",
-        }}
-        animate={{
-          rotate: -360,
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        style={{ width: "74%", height: "74%", border: "1.5px solid transparent", borderTopColor: "var(--orange)", borderBottomColor: "var(--blue-soft)" }}
+        animate={{ rotate: -360 }}
+        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
       />
-
-      {/* ORBIT DOT */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: "#00A3FF",
-            boxShadow: "0 0 14px #00A3FF",
-            transform: `translate(-50%, -50%) translateX(${size * 0.48}px)`,
-          }}
-        />
-      </motion.div>
-
-      {/* STATIC LOGO */}
       <img
         src={logo}
-        alt="DSquareX"
+        alt=""
+        width={size}
+        height={size}
         draggable="false"
-        className="relative z-10 select-none"
-        style={{
-          width: size * 0.68,
-          height: size * 0.68,
-          objectFit: "contain",
-          filter:
-            "drop-shadow(0 0 10px rgba(0,163,255,.8)) drop-shadow(0 0 18px rgba(255,153,0,.6))",
-        }}
+        className="relative z-10 select-none object-contain"
+        style={{ width: size * 0.62, height: size * 0.62 }}
       />
-    </div>
+    </span>
   );
 }
 

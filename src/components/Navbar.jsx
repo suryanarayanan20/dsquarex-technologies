@@ -1,139 +1,129 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/logo.png";
 import AnimatedLogoMark from "./AnimatedLogoMark";
+import { telHref, site } from "../data/site";
+
+const links = [
+  { name: "Work", to: "/work" },
+  { name: "Services", to: "/#services" },
+  { name: "Process", to: "/#process" },
+  { name: "About", to: "/#about" },
+  { name: "Contact", to: "/#contact" },
+];
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { pathname, hash } = useLocation();
 
-  const links = [
-    { name: "Services", href: "#services" },
-    { name: "Process", href: "#process" },
-    { name: "Why Us", href: "#why-us" },
-    { name: "Work", href: "#projects" },
-    { name: "Contact", href: "#contact" },
-  ];
+  // close the mobile menu on navigation
+  useEffect(() => setMenuOpen(false), [pathname, hash]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.documentElement.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const isActive = (to) => (to === "/work" ? pathname.startsWith("/work") : pathname === "/" && hash === to.slice(1));
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 border-b border-white/[0.06] bg-[#0A111E]/85 backdrop-blur-xl">
-      
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+    <header
+      className={`fixed top-0 inset-x-0 z-50 border-b transition-colors duration-300 ${
+        scrolled || menuOpen ? "bg-[var(--bg)]/90 backdrop-blur-xl border-white/[0.07]" : "bg-transparent border-transparent"
+      }`}
+    >
+      <nav aria-label="Main" className="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label={`${site.name} — home`}>
+          <AnimatedLogoMark size={44} />
+          <span className="leading-tight">
+            <span className="block font-[family-name:var(--font-display)] font-semibold text-base md:text-lg text-[var(--ink)]">{site.shortName}</span>
+            <span className="block text-[9px] md:text-[10px] tracking-[0.2em] text-[var(--muted)] uppercase">{site.name.replace(site.shortName, "").trim()}</span>
+          </span>
+        </Link>
 
-        {/* Left Logo */}
-        <a href="#home" className="flex items-center gap-2">
-
-          <img
-            src={logo}
-            alt="DSquareX"
-            className="h-12 w-12 md:h-16 md:w-16 object-contain shrink-0"
-          />
-
-          <div className="leading-tight">
-            <p className="font-[Space_Grotesk] font-semibold text-base md:text-lg text-white">
-              DSquareX
-            </p>
-
-            <p className="text-[8px] md:text-[10px] tracking-[0.2em] text-slate-400 uppercase">
-              Technologies
-            </p>
-          </div>
-
-        </a>
-
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-8">
-
+        <ul className="hidden md:flex items-center gap-1 lg:gap-2">
           {links.map((link) => (
             <li key={link.name}>
-              <a
-                href={link.href}
-                className="text-sm text-slate-400 hover:text-[#00A3FF] transition-all duration-300"
+              <Link
+                to={link.to}
+                aria-current={isActive(link.to) ? "page" : undefined}
+                className={`relative px-3 py-2 text-sm rounded-md transition-colors ${
+                  isActive(link.to) ? "text-[var(--ink)]" : "text-[var(--muted)] hover:text-[var(--ink)]"
+                }`}
               >
                 {link.name}
-              </a>
+                {isActive(link.to) && <span className="absolute left-3 right-3 -bottom-0.5 h-px bg-[var(--orange)]" aria-hidden="true" />}
+              </Link>
             </li>
           ))}
-
         </ul>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-3">
-
-         {/* Mobile Animated Logo */}
-<div className="md:hidden">
-  <AnimatedLogoMark size={30} />
-</div>
-
-{/* Desktop Animated Logo */}
-<div className="hidden md:block">
-  <AnimatedLogoMark size={80} />
-</div>
-
-
-          {/* Desktop CTA */}
-          <a
-            href="https://wa.me/916282787553"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden md:inline-flex items-center gap-2 border border-[#FF9900]/40 hover:bg-[#FF9900]/10 text-white font-medium px-5 py-2.5 rounded-xl transition-all duration-300"
-          >
-            Start a Project
+        <div className="flex items-center gap-2">
+          <a href={telHref} className="hidden lg:inline-flex mono text-xs text-[var(--muted)] hover:text-[var(--ink)] px-3 py-2 transition-colors">
+            {site.phoneDisplay}
           </a>
-
-          {/* Mobile Menu Button */}
+          <Link to="/#contact" className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-sm">
+            Start a project
+          </Link>
           <button
-            className="md:hidden text-2xl text-white ml-1"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle Menu"
+            type="button"
+            className="md:hidden icon-btn"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            {menuOpen ? "✕" : "☰"}
+            <span aria-hidden="true" className="text-lg leading-none">{menuOpen ? "✕" : "☰"}</span>
           </button>
-
         </div>
+      </nav>
 
-      </div>
-
-      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#0A111E] border-t border-white/[0.06] overflow-hidden"
+            transition={{ duration: 0.25 }}
+            className="md:hidden bg-[var(--bg)] border-t border-white/[0.06] overflow-hidden"
           >
-            <ul className="flex flex-col text-center py-3">
-
+            <ul className="flex flex-col px-4 py-3">
               {links.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block py-4 text-slate-300 hover:text-[#00A3FF] transition"
+                  <Link
+                    to={link.to}
+                    aria-current={isActive(link.to) ? "page" : undefined}
+                    className="flex items-center justify-between py-4 border-b border-white/[0.06] text-lg text-[var(--ink)]"
                   >
                     {link.name}
-                  </a>
+                    <span className="text-[var(--orange)]" aria-hidden="true">/</span>
+                  </Link>
                 </li>
               ))}
-
-              <li className="px-5 py-4">
-                <a
-                  href="https://wa.me/916282787553"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block bg-gradient-to-r from-[#00A3FF] to-[#0052D4] text-white font-medium py-3 rounded-xl"
-                >
-                  Start a Project
-                </a>
+              <li className="grid grid-cols-2 gap-3 pt-5 pb-3">
+                <a href={telHref} className="btn-ghost !px-3">Call us</a>
+                <Link to="/#contact" className="btn-primary !px-3">Start a project</Link>
               </li>
-
             </ul>
           </motion.div>
         )}
       </AnimatePresence>
-
-    </nav>
+    </header>
   );
 }
 

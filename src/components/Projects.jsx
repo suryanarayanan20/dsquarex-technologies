@@ -1,83 +1,63 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import ProjectCard from "./ProjectCard";
+import { featuredProjects, publishedProjects } from "../data/projects";
 
+/** Homepage "Selected work" — client projects first, everything else one click away. */
 function Projects() {
-  const projects = [
-    {
-      title: "AI Resume Analyzer",
-      description:
-        "AI-powered resume analysis platform that evaluates resumes, provides ATS scoring, identifies skill gaps, and generates improvement suggestions.",
-      tech: "Java · Spring Boot · MySQL · Hugging Face API · LLaMA 3",
-      live: "https://resume-analyzer-2edj.onrender.com",
-      github: "https://github.com/suryanarayanan20/resume-analyzer",
-    },
-    {
-      title: "Coffee Shop POS System",
-      description:
-        "Point of sale system for managing orders, billing, and database operations with optimized MySQL integration.",
-      tech: "Java · JDBC · MySQL · OOP",
-      live: "https://suryacoffeeshop.vercel.app/",
-      github: "https://github.com/suryanarayanan20/Coffee-pos-System",
-    },
-    {
-      title: "Personal Portfolio Website",
-      description:
-        "Modern responsive portfolio website showcasing projects, skills, resume, and professional experience.",
-      tech: "React · JavaScript · Tailwind CSS · Vercel",
-      live: "https://suryanarayanan-portfolio.vercel.app/",
-      github: "https://github.com/suryanarayanan20/Protfolio-Surya-",
-    },
-  ];
+  const inhouse = publishedProjects.filter((p) => p.type === "inhouse");
 
   return (
-    <section id="projects" className="relative bg-[var(--bg-raised)] text-[var(--ink)] py-28 seam-up">
-      <div className="max-w-7xl mx-auto px-6 pt-6">
-        <p className="mono slash text-sm text-[var(--muted)] tracking-[0.15em]">SELECTED WORK</p>
+    <section id="projects" aria-labelledby="projects-heading" className="relative bg-[var(--bg-raised)] text-[var(--ink)] py-24 md:py-28 seam-up">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div>
+            <p className="eyebrow slash">Selected work</p>
+            <h2 id="projects-heading" className="text-4xl md:text-5xl font-semibold mt-4 max-w-2xl">
+              Recent work for real businesses
+            </h2>
+            <p className="text-[var(--muted)] mt-5 text-lg max-w-2xl leading-relaxed">
+              Recent builds for construction, architecture and interior firms across Tamil Nadu — each one designed
+              to turn a visit into a call, a WhatsApp message or a quote request.
+            </p>
+          </div>
+          <Link
+            to="/work"
+            className="shrink-0 inline-flex items-center gap-2 border border-white/[0.12] hover:border-[var(--orange)]/60 px-5 py-3 rounded-xl text-sm font-medium transition-colors self-start md:self-auto"
+          >
+            All {publishedProjects.length} projects <span aria-hidden="true">→</span>
+          </Link>
+        </div>
 
-        <h2 className="text-4xl md:text-5xl font-semibold mt-4 max-w-2xl">
-          Real builds, real stacks
-        </h2>
-        <p className="text-[var(--muted)] mt-5 text-lg max-w-2xl leading-relaxed">
-          Applications built with Java, AI and modern web technologies.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-6 mt-14">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mt-12 md:mt-14">
+          {featuredProjects.map((project, index) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
+              key={project.slug}
+              initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className="card-cross bg-[var(--bg-raised-2)] rounded-2xl p-8 border border-white/[0.08] flex flex-col"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ delay: index * 0.08, duration: 0.5 }}
+              className={index === 0 ? "sm:col-span-2 lg:col-span-1" : ""}
             >
-              <h3 className="text-xl font-semibold">{project.title}</h3>
-              <p className="text-[var(--muted)] mt-4 text-sm leading-relaxed flex-1">
-                {project.description}
-              </p>
-              <div className="mono mt-5 text-[var(--orange-soft)] text-xs leading-relaxed">
-                {project.tech}
-              </div>
-              <div className="flex gap-3 mt-8">
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-[var(--blue)] hover:bg-[var(--blue-soft)] px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                >
-                  Live demo
-                </a>
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="border border-white/[0.12] hover:border-[var(--orange)]/60 px-5 py-2.5 rounded-lg text-sm transition-colors"
-                >
-                  GitHub
-                </a>
-              </div>
+              <ProjectCard project={project} />
             </motion.div>
           ))}
         </div>
+
+        {inhouse.length > 0 && (
+          <p className="text-sm text-[var(--muted)] mt-10 leading-relaxed">
+            <span className="mono text-[var(--orange)] mr-2">/</span>
+            Also built in-house:{" "}
+            {inhouse.map((p, i) => (
+              <span key={p.slug}>
+                <Link to={`/work/${p.slug}`} className="text-[var(--ink)] underline decoration-white/20 underline-offset-4 hover:decoration-[var(--orange)]">
+                  {p.title}
+                </Link>
+                {i < inhouse.length - 1 ? ", " : "."}
+              </span>
+            ))}
+          </p>
+        )}
       </div>
     </section>
   );

@@ -1,111 +1,165 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getProject, publishedProjects } from "../data/projects";
+import { site } from "../data/site";
+
+const clientCount = publishedProjects.filter((p) => p.type === "client").length;
+
+/** Real client screenshots, layered — the work is the hero. */
+function HeroShowcase() {
+  const back = getProject("v-thittam-design-studio");
+  const front = getProject("sraj-construction-interior");
+  const phone = back?.gallery.find((g) => g.device === "mobile");
+  if (!back || !front) return null;
+
+  return (
+    <div className="relative w-full max-w-[640px] mx-auto lg:mx-0 aspect-[16/12.5] sm:aspect-[16/11]">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute right-0 top-0 w-[82%]"
+      >
+        <Link to={`/work/${back.slug}`} className="block frame frame-lift" aria-label={`${back.title} case study`}>
+          <img
+            src={back.cover.src}
+            srcSet={back.cover.srcSet}
+            sizes="(min-width: 1024px) 34vw, 80vw"
+            width={back.cover.width}
+            height={back.cover.height}
+            alt=""
+            fetchpriority="high"
+            className="block w-full h-auto"
+          />
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute left-0 bottom-0 w-[72%]"
+      >
+        <Link to={`/work/${front.slug}`} className="block frame frame-lift shadow-2xl" aria-label={`${front.title} case study`}>
+          <img
+            src={front.cover.src}
+            srcSet={front.cover.srcSet}
+            sizes="(min-width: 1024px) 30vw, 70vw"
+            width={front.cover.width}
+            height={front.cover.height}
+            alt=""
+            className="block w-full h-auto"
+          />
+        </Link>
+      </motion.div>
+
+      {phone && (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute right-[4%] bottom-[-4%] w-[19%] hidden sm:block"
+          aria-hidden="true"
+        >
+          <div className="phone shadow-2xl">
+            <img src={phone.src} srcSet={phone.srcSet} sizes="140px" width={phone.width} height={phone.height} alt="" className="block w-full h-auto" />
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+}
 
 function Hero() {
   return (
-    <section
-      id="home"
-      className="relative min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-20 overflow-hidden"
-    >
-      {/* Faint technical grid, restrained */}
-      <div
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-        }}
-      />
+    <section id="home" aria-labelledby="hero-heading" className="relative bg-[var(--bg)] text-[var(--ink)] pt-24 md:pt-28 pb-20 md:pb-24 overflow-hidden">
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="hero-cross" aria-hidden="true" />
 
-      {/* Signature: two crossing diagonal bars, echoing the D/X mark */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -right-24 top-0 w-[420px] h-[900px] bg-gradient-to-b from-[var(--blue)]/25 via-[var(--blue)]/5 to-transparent rotate-[18deg] blur-2xl" />
-        <div className="absolute -right-56 top-40 w-[420px] h-[900px] bg-gradient-to-b from-[var(--orange)]/25 via-[var(--orange)]/5 to-transparent -rotate-[18deg] blur-2xl" />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 min-h-[calc(100vh-5rem)] flex items-center">
-        <div className="max-w-4xl">
-          <motion.span
-            initial={{ opacity: 0, y: -16 }}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-14 lg:gap-10 items-center min-h-[calc(100svh-7rem)]">
+        <div className="lg:col-span-6 pt-8 lg:pt-0">
+          <motion.p
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mono inline-flex items-center gap-2 border border-white/[0.09] text-[var(--muted)] px-4 py-2 rounded-md text-xs tracking-[0.15em]"
+            className="mono inline-flex flex-wrap items-center gap-2 border border-white/[0.09] text-[var(--muted)] px-3.5 py-2 rounded-md text-[11px] sm:text-xs tracking-[0.15em]"
           >
-            WEBSITES <span className="text-[var(--orange)]">/</span> AI <span className="text-[var(--orange)]">/</span> AUTOMATION
-          </motion.span>
+            WEBSITES <span className="text-[var(--orange)]">/</span> WEB APPS <span className="text-[var(--orange)]">/</span> AI
+          </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 40 }}
+            id="hero-heading"
+            initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-semibold mt-8 leading-[1.08]"
+            className="text-[2.6rem] leading-[1.05] sm:text-6xl xl:text-7xl font-semibold mt-7 tracking-tight"
           >
-            Two paths, one
-            <br />
-            <span className="gradient-text">working system.</span>
+            Websites that turn visitors into <span className="gradient-text">enquiries.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.25, duration: 0.8 }}
-            className="text-[var(--muted)] text-lg md:text-xl mt-8 max-w-2xl leading-relaxed font-normal"
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="text-[var(--muted)] text-lg md:text-xl mt-7 max-w-xl leading-relaxed"
           >
-            DSquareX Technologies builds the website that brings people in
-            and the automation that keeps them moving — premium web
-            builds, AI-powered tools, and systems that scale with your
-            business instead of slowing it down.
+            {site.name} designs and builds business websites, custom web applications and AI-powered
+            tools — with clear pricing, direct communication and code you own.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.7 }}
-            className="flex flex-col sm:flex-row gap-4 mt-10"
+            transition={{ delay: 0.35, duration: 0.7 }}
+            className="flex flex-col sm:flex-row gap-3 mt-10"
           >
-            <a
-              href="https://wa.me/916282787553"
-              target="_blank"
-              rel="noreferrer"
-              className="bg-[var(--blue)] hover:bg-[var(--blue-soft)] text-white font-medium px-8 py-4 rounded-xl transition-colors duration-300 text-center"
-            >
-              Get a free consultation
-            </a>
-            <a
-              href="#projects"
-              className="border border-white/[0.12] hover:border-[var(--orange)]/60 px-8 py-4 rounded-xl transition-colors duration-300 text-center"
-            >
-              See the work
-            </a>
+            <Link to="/#contact" className="btn-primary">
+              Discuss your project
+            </Link>
+            <Link to="/work" className="btn-ghost">
+              See our work <span aria-hidden="true">→</span>
+            </Link>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.55, duration: 0.7 }}
-            className="mono text-xs text-[var(--muted)] tracking-wide mt-4"
+            transition={{ delay: 0.5, duration: 0.7 }}
+            className="mono text-[11px] sm:text-xs text-[var(--muted)] tracking-wide mt-5 leading-relaxed"
           >
-            No lock-in contracts <span className="text-[var(--orange)]">/</span> clear pricing before we start <span className="text-[var(--orange)]">/</span> you own the code
+            No lock-in contracts <span className="text-[var(--orange)]">/</span> clear pricing before we start{" "}
+            <span className="text-[var(--orange)]">/</span> you own the code
           </motion.p>
 
-          <motion.div
+          <motion.dl
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="grid grid-cols-3 gap-8 mt-16 max-w-xl border-t border-white/[0.08] pt-8"
+            transition={{ delay: 0.6 }}
+            className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 max-w-lg border-t border-white/[0.08] pt-7"
           >
             <div>
-              <h3 className="text-2xl font-semibold text-[var(--blue-soft)]">100%</h3>
-              <p className="mono text-xs text-[var(--muted)] mt-2 tracking-wide">CLIENT FOCUSED</p>
+              <dt className="sr-only">Client website projects</dt>
+              <dd className="text-2xl sm:text-3xl font-semibold text-[var(--blue-soft)]">{clientCount}</dd>
+              <dd className="mono text-[10px] sm:text-[11px] text-[var(--muted)] mt-1.5 tracking-wide uppercase leading-snug">Client website projects</dd>
             </div>
             <div>
-              <h3 className="text-2xl font-semibold text-[var(--orange-soft)]">24/7</h3>
-              <p className="mono text-xs text-[var(--muted)] mt-2 tracking-wide">SUPPORT</p>
+              <dt className="sr-only">Case studies</dt>
+              <dd className="text-2xl sm:text-3xl font-semibold text-[var(--orange-soft)]">{publishedProjects.length}</dd>
+              <dd className="mono text-[10px] sm:text-[11px] text-[var(--muted)] mt-1.5 tracking-wide uppercase leading-snug">Projects with case studies</dd>
             </div>
             <div>
-              <h3 className="text-2xl font-semibold text-[var(--blue-soft)]">AI</h3>
-              <p className="mono text-xs text-[var(--muted)] mt-2 tracking-wide">POWERED BUILDS</p>
+              <dt className="sr-only">Client locations</dt>
+              <dd className="text-lg sm:text-2xl font-semibold text-[var(--blue-soft)] leading-[1.25] sm:leading-[1.25] pt-1 sm:pt-0.5">Tamil Nadu</dd>
+              <dd className="mono text-[10px] sm:text-[11px] text-[var(--muted)] mt-1.5 tracking-wide uppercase leading-snug">Clients in Chennai, Trichy, Nagercoil</dd>
             </div>
-          </motion.div>
+          </motion.dl>
+        </div>
+
+        <div className="lg:col-span-6">
+          <HeroShowcase />
+          <p className="mono text-[11px] text-[var(--muted)] mt-8 lg:mt-10 text-center lg:text-left tracking-wide">
+            Recent client work <span className="text-[var(--orange)]">/</span> V Thittam Design Studio, SRAJ Construction
+          </p>
         </div>
       </div>
     </section>

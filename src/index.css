@@ -4,8 +4,7 @@
    Design tokens — DSquareX Technologies
    Signature idea: "The Crossing" — the D/X mark is two paths
    that cross. Diagonal seams, a slash divider, and a two-
-   letter mono tag system carry that idea through every
-   section instead of stock glow-blobs and emoji icons.
+   letter mono tag system carry that idea through the site.
 --------------------------------------------------------- */
 
 :root {
@@ -17,20 +16,20 @@
   --orange: #e8790c;
   --orange-soft: #f2a04d;
   --ink: #f3f1ea;
-  --muted: #9b9691;
+  --muted: #a39e98; /* 7.3:1 on --bg, 6.7:1 on --bg-raised */
   --line: rgba(255, 255, 255, 0.09);
 
-  --font-display: "Space Grotesk", "Inter", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-* {
-  box-sizing: border-box;
+  scroll-padding-top: 6rem; /* anchored sections clear the fixed header */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -38,7 +37,9 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
-  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
@@ -48,22 +49,15 @@ body {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 .mono {
   font-family: var(--font-mono);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--blue), var(--orange));
-  border-radius: 20px;
 }
 
 ::selection {
@@ -71,27 +65,170 @@ h1, h2, h3, h4 {
   color: var(--bg);
 }
 
-/* ---------------------------------------------------------
-   The Crossing — diagonal seams between sections, in place
-   of straight hairlines. Applied via clip-path on the section
-   wrapper so content above still reads as a full rectangle.
---------------------------------------------------------- */
+/* ---------- Focus & accessibility ---------- */
 
-.seam-down {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 48px));
+:focus-visible {
+  outline: 2px solid var(--orange-soft);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-.seam-up {
-  clip-path: polygon(0 48px, 100% 0, 100% 100%, 0 100%);
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  font-weight: 600;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 1rem;
 }
 
-/* Slash divider — replaces numbered markers where content
-   isn't actually a sequence. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+/* ---------- Type helpers ---------- */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Slash divider — echoes the crossing mark. */
 .slash::before {
   content: "/";
   color: var(--orange);
   font-family: var(--font-mono);
   margin-right: 0.5em;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--blue-soft), var(--orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.9rem 1.75rem;
+  border-radius: 0.8rem;
+  font-weight: 500;
+  font-size: 0.975rem;
+  text-align: center;
+  transition: background-color 0.25s, border-color 0.25s, color 0.25s;
+}
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #2b7cf0;
+}
+.btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--ink);
+}
+.btn-ghost:hover {
+  border-color: rgba(232, 121, 12, 0.6);
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s;
+}
+.icon-btn:hover {
+  border-color: rgba(232, 121, 12, 0.6);
+}
+
+/* ---------- The Crossing: diagonal seams between sections ---------- */
+
+.seam-up {
+  clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%);
+  margin-top: -40px;
+}
+
+/* Two crossing light bars behind the hero — the D/X mark, abstracted. */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 30% 30%, #000 30%, transparent 75%);
+}
+.hero-cross,
+.cta-cross {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-cross::before,
+.hero-cross::after,
+.cta-cross::before,
+.cta-cross::after {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 140%;
+  top: -20%;
+  filter: blur(48px);
+}
+.hero-cross::before {
+  right: 8%;
+  transform: rotate(18deg);
+  background: linear-gradient(180deg, rgba(30, 111, 224, 0.22), transparent 70%);
+}
+.hero-cross::after {
+  right: 22%;
+  transform: rotate(-18deg);
+  background: linear-gradient(180deg, rgba(232, 121, 12, 0.16), transparent 70%);
+}
+.cta-cross::before {
+  right: -60px;
+  transform: rotate(18deg);
+  background: linear-gradient(180deg, rgba(30, 111, 224, 0.2), transparent 70%);
+}
+.cta-cross::after {
+  right: 80px;
+  transform: rotate(-18deg);
+  background: linear-gradient(180deg, rgba(232, 121, 12, 0.14), transparent 70%);
 }
 
 /* Two-letter tag chip, echoes the DX mark */
@@ -106,7 +243,7 @@ h1, h2, h3, h4 {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 0.6rem;
-  background: linear-gradient(135deg, rgba(30,111,224,0.16), rgba(232,121,12,0.16));
+  background: linear-gradient(135deg, rgba(30, 111, 224, 0.16), rgba(232, 121, 12, 0.16));
   border: 1px solid var(--line);
   color: var(--orange-soft);
 }
@@ -121,119 +258,147 @@ h1, h2, h3, h4 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 40%, rgba(30,111,224,0.10) 50%, transparent 60%);
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 40%, rgba(30, 111, 224, 0.1) 50%, transparent 60%);
   transform: translateX(-120%);
   transition: transform 0.6s ease;
 }
 .card-cross:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   border-color: rgba(232, 121, 12, 0.35);
 }
 .card-cross:hover::after {
   transform: translateX(120%);
 }
 
-.gradient-text {
-  background: linear-gradient(90deg, var(--blue-soft), var(--orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Whole card clickable via its heading link (keeps one tab stop per card). */
+.card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.card-link:focus-visible {
+  outline: none;
+}
+.card-link:focus-visible::after {
+  outline: 2px solid var(--orange-soft);
+  outline-offset: -2px;
+  border-radius: 1rem;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--line);
+/* ---------- Screenshot frames ---------- */
+
+.frame {
+  border-radius: 0.85rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0e1117;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+.frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  background: #151922;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.frame-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.frame-url {
+  min-width: 0;
+  margin-left: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.frame-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+.frame-lift:hover {
+  transform: translateY(-6px);
+  border-color: rgba(232, 121, 12, 0.45);
 }
 
-/* Navbar corner logo — its own animation, distinct from the
-   page watermark: a slow tilt-and-glow loop, always in motion. */
-@keyframes logo-nav-loop {
-  0% {
-    transform: rotate(0deg) scale(1);
-    filter: drop-shadow(0 0 0px rgba(30, 111, 224, 0));
-  }
-  25% {
-    transform: rotate(-6deg) scale(1.05);
-    filter: drop-shadow(0 0 10px rgba(30, 111, 224, 0.55));
-  }
-  50% {
-    transform: rotate(0deg) scale(1);
-    filter: drop-shadow(0 0 14px rgba(232, 121, 12, 0.6));
-  }
-  75% {
-    transform: rotate(6deg) scale(1.05);
-    filter: drop-shadow(0 0 10px rgba(30, 111, 224, 0.55));
-  }
-  100% {
-    transform: rotate(0deg) scale(1);
-    filter: drop-shadow(0 0 0px rgba(30, 111, 224, 0));
+.phone {
+  border-radius: 1.4rem;
+  overflow: hidden;
+  border: 5px solid #1c212c;
+  background: #0e1117;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.zoomable {
+  cursor: zoom-in;
+  border-radius: 0.85rem;
+}
+.zoomable:hover .frame,
+.zoomable.phone:hover {
+  border-color: rgba(232, 121, 12, 0.45);
+}
+
+/* ---------- Forms ---------- */
+
+.form-panel {
+  background: var(--bg-raised-2);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+@media (min-width: 640px) {
+  .form-panel {
+    padding: 2.25rem;
   }
 }
 
-.logo-nav {
-  animation: logo-nav-loop 5s ease-in-out infinite;
-  transform-origin: center;
+.select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a39e98' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+select option {
+  background: var(--bg-raised-2);
+  color: var(--ink);
 }
 
-.logo-nav:hover {
-  animation-duration: 1.6s;
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
 }
-
-/* Hero centerpiece logo mark — rotating gradient rings, orbiting
-   particles, and a gentle float. This is the "in motion, in place"
-   signature moment; the nav logo and page watermark stay separate,
-   quieter animations so this one reads as the standout. */
-@keyframes ring-spin {
-  from {
-    transform: rotate(0deg);
-  }
+@keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes logo-float {
-  0%,100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(8, 10, 14, 0.96);
+  color: var(--ink);
+}
+.lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.7);
 }
 
-.orbit-ring-a {
-  animation: ring-spin 10s linear infinite;
-}
-
-.logo-mark-core {
-  animation: logo-float 3s ease-in-out infinite;
-}
-
-@media (max-width:768px) {
-  .orbit-ring-a {
-    animation-duration: 15s;
-  }
-
-  .logo-mark-core {
-    animation: none;
-  }
-}
-
-@media (max-width:768px) {
-  .orbit-ring-a {
-    animation-duration: 20s;
-  }
-
-  .orbit-ring-b {
-    animation-duration: 15s;
-  }
-
-  .orbit-track {
-    animation-duration: 14s;
-  }
-}/* Smooth GPU Rendering */
-img,
-div {
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
+} /* end @layer components */
